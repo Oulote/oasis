@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription - OASIS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 700px; margin: 40px auto;">
+    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <h2 style="color: #00897b; text-align: center; margin-bottom: 30px;">📝 Inscription</h2>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Nom</label>
+                <input type="text" name="nom" placeholder="Votre nom" required
+                       style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Prénom</label>
+                <input type="text" name="prenom" placeholder="Votre prénom" required
+                       style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Téléphone</label>
+                <input type="tel" name="telephone" placeholder="Ex: 05 00 00 00 00" required
+                       style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Mot de passe</label>
+                <input type="password" name="mot_de_passe" placeholder="Min 8 caractères" required
+                       style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+            </div>
+            <div style="margin-bottom: 25px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Type de compte</label>
+                <select name="role" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;">
+                    <option value="client">Client</option>
+                    <option value="promoteur">Promoteur</option>
+                </select>
+            </div>
+            
+            <!-- ============================================ -->
+            <!-- RÈGLEMENT INTÉRIEUR COMPLET AVEC CASE À COCHER -->
+            <!-- ============================================ -->
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #00897b; max-height: 400px; overflow-y: auto;">
+
+                <h4 style="color: #00897b; text-align: center; margin-bottom: 15px;">📋 RÈGLEMENT INTÉRIEUR OASIS</h4>
+                
+                <div style="font-size: 14px; line-height: 1.8; color: #333;">
+                    
+                    <p style="font-weight: bold; color: #00897b;">🏛️ PRÉAMBULE</p>
+                    <p style="margin-bottom: 10px;">OASIS est une plateforme de mise en relation entre les promoteurs et les clients. La présente charte garantit un environnement sain, respectueux et de qualité pour tous.</p>
+                    
+                    <p style="font-weight: bold; color: #dc3545;">🚫 CONTENUS INTERDITS</p>
+                    <ul style="padding-left: 20px; margin-bottom: 10px;">
+                        <li>❌ Contenu pornographique ou à caractère sexuel</li>
+                        <li>❌ Contenu violent, haineux ou discriminatoire</li>
+                        <li>❌ Contenu illégal ou frauduleux</li>
+                        <li>❌ Contenu trompeur ou falsifié</li>
+                        <li>❌ Spam et publicité non sollicitée</li>
+                    </ul>
+                    
+                    <p style="font-weight: bold; color: #dc3545;">⚖️ SANCTIONS (mauvaises notes ≤ 2/5)</p>
+                    <ul style="padding-left: 20px; margin-bottom: 10px;">
+                        <li><strong>500 - 999</strong> : ⚠️ Avertissement</li>
+                        <li><strong>1 000 - 2 499</strong> : 🚫 Suspension 7 jours</li>
+                        <li><strong>2 500 - 4 999</strong> : 🚫 Suspension 30 jours</li>
+                        <li><strong style="color: #dc3545;">5 000 et +</strong> : <strong style="color: #dc3545;">⛔ Bannissement définitif</strong></li>
+                    </ul>
+                    
+                    <p style="font-weight: bold; color: #00897b;">📋 OBLIGATIONS DU PROMOTEUR</p>
+                    <ul style="padding-left: 20px; margin-bottom: 10px;">
+                        <li>✅ Fournir des informations exactes et vérifiées</li>
+                        <li>✅ Photos et vidéos conformes à la réalité</li>
+                        <li>✅ Services de qualité conformes à la description</li>
+                        <li>✅ Répondre aux commentaires des clients</li>
+                        <li>✅ Mettre à jour régulièrement ses articles</li>
+                    </ul>
+                    
+                    <p style="font-weight: bold; color: #00897b;">🔍 MODÉRATION</p>
+                    <p style="margin-bottom: 10px;">OASIS se réserve le droit de modérer, supprimer ou suspendre tout contenu ou compte en cas de non-respect du règlement.</p>
+                    
+                    <p style="font-style: italic; color: #666; margin-top: 10px; border-top: 1px solid #ddd; padding-top: 10px; text-align: center;">
+                        En publiant sur OASIS, vous acceptez ce règlement intérieur.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CASE À COCHER -->
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 2px solid #f9a825; margin-bottom: 20px;">
+                <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-size: 15px;">
+                    <input type="checkbox" name="accepte_reglement" required style="margin-top: 3px; width: 18px; height: 18px;">
+                    <span>
+                        <strong>J'accepte le règlement intérieur d'OASIS</strong><br>
+                        <span style="color: #666; font-size: 13px;">
+                            Je certifie avoir lu et compris l'intégralité du règlement et m'engage à le respecter.
+                        </span>
+                    </span>
+                </label>
+            </div>
+            
+            <button type="submit" 
+                    style="width: 100%; padding: 14px; background: #f9a825; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer;">
+                S'inscrire
+            </button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 20px; color: #666;">
+            Déjà inscrit ? <a href="{% url 'connexion_page' %}" style="color: #00897b; text-decoration: none; font-weight: 500;">Connectez-vous</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,2 +1,1 @@
 python-3.10.20
-Ajout de runtime.txt
