@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Mon Profil - OASIS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; margin: 40px auto;">
+    
+    <!-- En-tête du profil -->
+    <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div>
+                <h1 style="color: #00897b;">👤 Mon Profil</h1>
+                <p style="color: #666; font-size: 18px; font-weight: bold;">{{ user.first_name }} {{ user.last_name }}</p>
+                <p style="color: #999; font-size: 14px;">📱 {{ user.telephone }}</p>
+                <p style="color: #999; font-size: 14px;">📧 {{ user.email }}</p>
+                <p style="color: #999; font-size: 14px;">🎯 Rôle : <strong>Client</strong></p>
+            </div>
+            <div style="text-align: center; background: #f8f9fa; padding: 20px 30px; border-radius: 10px; min-width: 150px;">
+                <p style="font-size: 32px; font-weight: bold; color: #00897b;">{{ total_visites_mois }}</p>
+                <p style="color: #666; font-size: 14px;">Visites ce mois-ci</p>
+                <p style="color: #999; font-size: 12px;">{{ jours_actifs }} jours actifs</p>
+            </div>
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+        
+        <!-- Colonne de gauche -->
+        <div>
+            <!-- Catégories les plus visitées -->
+            <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px;">
+                <h3 style="color: #00897b; margin-bottom: 15px;">🏷️ Catégories préférées</h3>
+                {% if top_categories %}
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        {% for cat, count in top_categories %}
+                            <div style="background: #00897b; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px;">
+                                {{ cat }} ({{ count }} visites)
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="color: #999;">Aucune visite enregistrée ce mois-ci</p>
+                {% endif %}
+            </div>
+            
+            <!-- Articles les plus visités -->
+            <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h3 style="color: #00897b; margin-bottom: 15px;">🔥 Top 5 des visites</h3>
+                {% if top_articles %}
+                    {% for article, count in top_articles %}
+                        <a href="/articles/{{ article.id }}/" style="text-decoration: none; color: inherit; display: block;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
+                                <div>
+                                    <strong>{{ article.titre }}</strong>
+                                    <p style="color: #999; font-size: 12px;">📍 {{ article.ville }}, {{ article.pays }}</p>
+                                </div>
+                                <span style="background: #f9a825; color: white; padding: 3px 10px; border-radius: 10px; font-size: 12px;">{{ count }}x</span>
+                            </div>
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: #999;">Aucune visite enregistrée</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Colonne de droite -->
+        <div>
+            <!-- Recommandations personnalisées -->
+            <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h3 style="color: #00897b; margin-bottom: 15px;">🎯 Recommandations pour vous</h3>
+                <p style="color: #999; font-size: 14px; margin-bottom: 15px;">
+                    Basé sur vos {{ categories_visitees|length }} catégories favorites
+                </p>
+                
+                {% if recommandations %}
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        {% for article in recommandations %}
+                            <a href="/articles/{{ article.id }}/" style="text-decoration: none; color: inherit; display: block;">
+                                <div style="display: flex; gap: 15px; padding: 10px; background: #f8f9fa; border-radius: 10px; transition: transform 0.3s;">
+                                    <div style="flex: 1;">
+                                        <strong style="color: #00897b;">{{ article.titre }}</strong>
+                                        <p style="color: #666; font-size: 13px; margin: 5px 0;">{{ article.description|truncatechars:60 }}</p>
+                                        <div style="display: flex; gap: 10px; font-size: 12px; color: #999;">
+                                            <span>📍 {{ article.ville }}</span>
+                                            <span>💰 {{ article.prix }} FCFA</span>
+                                            <span>🏷️ {{ article.categorie.nom }}</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center;">
+                                        <span style="background: #f9a825; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px;">🌟 Nouveau</span>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="color: #999; text-align: center; padding: 20px;">
+                        Visitez plus d'articles pour recevoir des recommandations personnalisées !
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dernières visites -->
+    <div style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-top: 30px;">
+        <h3 style="color: #00897b; margin-bottom: 15px;">📋 Historique des visites (30 jours)</h3>
+        {% if visites_mois %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;">
+                {% for visite in visites_mois %}
+                    <a href="/articles/{{ visite.article.id }}/" style="text-decoration: none; color: inherit;">
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; border-left: 4px solid #00897b;">
+                            <strong style="font-size: 14px;">{{ visite.article.titre }}</strong>
+                            <p style="color: #999; font-size: 11px;">{{ visite.date_visite|date:"d/m/Y H:i" }}</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="color: #999; text-align: center; padding: 20px;">Aucune visite enregistrée ce mois-ci</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OASIS{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        body {
+            background-color: #f0f9f4;
+            color: #333;
+        }
+        nav {
+            background: linear-gradient(135deg, #00897b, #f9a825);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        nav .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 3px;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        .hero {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 60px 20px;
+            text-align: center;
+            margin: 20px;
+        }
+        .hero h1, .hero p {
+            color: white !important;
+        }
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .search-bar input {
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            font-size: 16px;
+            width: 350px;
+        }
+        .search-bar button {
+            padding: 12px 25px;
+            background: #f9a825;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background: #e69500;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-size: 28px;
+            color: #00897b;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .categories {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .categorie-btn {
+            padding: 10px 25px;
+            background: white;
+            border: 2px solid #00897b;
+            border-radius: 30px;
+            color: #00897b;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .categorie-btn:hover {
+            background: #00897b;
+            color: white;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .card-body {
+            padding: 15px;
+        }
+        .card-body h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #00897b;
+        }
+        .card-body p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .card-body .prix {
+            font-size: 16px;
+            font-weight: bold;
+            color: #f9a825;
+        }
+        .card-body .ville {
+            font-size: 13px;
+            color: #999;
+        }
+        .messages {
+            max-width: 1200px;
+            margin: 10px auto;
+            padding: 0 20px;
+        }
+        .message {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .message.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        .message.info {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+        footer {
+            background: #00897b;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+        }
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background: #00897b;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #00695c;
+        }
+        .btn-warning {
+            background: #f9a825;
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #e69500;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        .btn-info:hover {
+            background: #138496;
+        }
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                text-align: center;
+            }
+            nav ul {
+                justify-content: center;
+            }
+            .hero {
+                padding: 40px 15px;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
+            .search-bar input {
+                width: 100%;
+            }
+            .search-bar select {
+                width: 100%;
+            }
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        {% block style %}{% endblock %}
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">🌴 OASIS</div>
+        <ul>
+            <li><a href="{% url 'accueil' %}">Accueil</a></li>
+            <li><a href="/articles/">Articles</a></li>
+            <li><a href="{% url 'reglement' %}">📋 Règlement</a></li>
+            {% if user.is_authenticated %}
+                {% if user.role == 'promoteur' %}
+                    <li><a href="{% url 'dashboard' %}">📊 Dashboard</a></li>
+                {% endif %}
+                <li><a href="{% url 'profil_client' %}">👤 Mon Profil</a></li>
+                <li><a href="/deconnexion/">Déconnexion</a></li>
+            {% else %}
+                <li><a href="{% url 'connexion_page' %}">Connexion</a></li>
+                <li><a href="{% url 'inscription_page' %}">Inscription</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <p>© 2024 OASIS — Plateforme de loisirs et détente</p>
+    </footer>
+</body>
+</html>

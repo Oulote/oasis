@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.titre }} - OASIS{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin: 40px auto;">
+    <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        
+        <!-- Carrousel d'images -->
+        <div style="position: relative; width: 100%; height: 400px; overflow: hidden; border-radius: 10px; margin-bottom: 20px;">
+            <div id="carousel" style="display: flex; transition: transform 0.5s ease;">
+                {% if article.photos.all %}
+                    {% for photo in article.photos.all %}
+                        <img src="{{ photo.image.url }}" alt="{{ article.titre }}" 
+                             style="width: 100%; height: 400px; object-fit: cover; flex-shrink: 0;">
+                    {% endfor %}
+                {% else %}
+                    <img src="https://via.placeholder.com/800x400/00897b/white?text=OASIS" alt="OASIS">
+                {% endif %}
+            </div>
+            
+            <!-- Boutons de navigation -->
+            <button onclick="prevSlide()" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer;">❮</button>
+            <button onclick="nextSlide()" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer;">❯</button>
+        </div>
+        
+        <h1 style="color: #00897b; margin-bottom: 10px;">{{ article.titre }}</h1>
+        <p style="color: #666; font-size: 16px; margin-bottom: 20px;">{{ article.description }}</p>
+        
+        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+            <p style="font-size: 18px; font-weight: bold; color: #f9a825;">💰 {{ article.prix }} FCFA</p>
+            <p style="font-size: 16px; color: #666;">📍 {{ article.ville }}, {{ article.pays }}</p>
+            <p style="font-size: 14px; color: #999;">Catégorie : {{ article.categorie.nom }}</p>
+        </div>
+        
+        <p style="font-size: 14px; color: #999;">Publié par {{ article.promoteur.first_name }} le {{ article.date_creation|date:"d/m/Y" }}</p>
+        
+        <!-- ==================== LOCALISATION AVEC LIENS VTC ==================== -->
+        {% if article.adresse or article.latitude and article.longitude %}
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #eee;">
+                <h3 style="color: #00897b; margin-bottom: 15px;">📍 Localisation</h3>
+                
+                {% if article.latitude and article.longitude %}
+                    <div style="border-radius: 10px; overflow: hidden; margin-bottom: 15px;">
+                        <iframe 
+                            src="https://www.google.com/maps?q={{ article.latitude }},{{ article.longitude }}&z=15&output=embed"
+                            width="100%" 
+                            height="300" 
+                            style="border: 0;"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                {% endif %}
+                
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                    📍 {{ article.adresse }}, {{ article.ville }}, {{ article.pays }}
+                </p>
+                
+                <!-- Boutons pour les applications VTC -->
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <!-- Google Maps -->
+                    {% if article.latitude and article.longitude %}
+                        <a href="https://www.google.com/maps/dir//{{ article.latitude }},{{ article.longitude }}" 
+                           target="_blank" 
+                           style="background: #4285f4; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: bold;">
+                            🗺️ Google Maps
+                        </a>
+                    {% endif %}
+                    
+                    <!-- Yango (ex-Yandex Taxi) -->
+                    {% if article.latitude and article.longitude %}
+                        <a href="https://yango.com/taxi/order?from=ma position&to={{ article.latitude }},{{ article.longitude }}" 
+                           target="_blank" 
+                           style="background: #ffcc00; color: #333; padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: bold;">
+                            🚕 Yango
+                        </a>
+                    {% endif %}
+                    
+                    <!-- Waze -->
+                    {% if article.latitude and article.longitude %}
+                        <a href="https://www.waze.com/ul?ll={{ article.latitude }},{{ article.longitude }}&navigate=yes" 
+                           target="_blank" 
+                           style="background: #33ccff; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: bold;">
+                            🚗 Waze
+                        </a>
+                    {% endif %}
+                    
+                    <!-- Lien vers l'adresse -->
+                    <a href="https://www.google.com/maps/search/{{ article.adresse|urlencode }}+{{ article.ville|urlencode }}" 
+                       target="_blank" 
+                       style="background: #00897b; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: bold;">
+                        📍 Voir l'adresse
+                    </a>
+                </div>
+                
+                {% if not article.latitude and not article.longitude %}
+                    <div style="margin-top: 10px;">
+                        <a href="https://www.google.com/maps/search/{{ article.adresse|urlencode }}+{{ article.ville|urlencode }}" 
+                           target="_blank" 
+                           style="background: #4285f4; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: bold;">
+                            🗺️ Ouvrir dans Google Maps
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <a href="/" style="display: inline-block; margin-top: 20px; background: #00897b; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none;">← Retour à l'accueil</a>
+    </div>
+    
+    <!-- ==================== SECTION COMMENTAIRES ==================== -->
+    <div style="margin-top: 30px; padding: 25px; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <h3 style="color: #00897b; margin-bottom: 15px;">💬 Commentaires</h3>
+        
+        <!-- Note moyenne -->
+        {% if article.commentaires.all %}
+            <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="font-size: 20px; color: #f9a825;">
+                    {% with article.commentaires.all as commentaires %}
+                        {% with commentaires|length as total %}
+                            {% if total > 0 %}
+                                {% for i in "12345"|make_list %}
+                                    {% if forloop.counter <= commentaires.0.note %}
+                                        ⭐
+                                    {% else %}
+                                        ☆
+                                    {% endif %}
+                                {% endfor %}
+                                <span style="font-size: 16px; color: #333;">({{ article.commentaires.count }} avis)</span>
+                            {% endif %}
+                        {% endwith %}
+                    {% endwith %}
+                </span>
+            </div>
+        {% endif %}
+        
+        <!-- Formulaire d'ajout de commentaire -->
+        {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'ajouter_commentaire' article.id %}" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                {% csrf_token %}
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Votre note</label>
+                    <select name="note" style="padding: 8px 15px; border-radius: 5px; border: 1px solid #ddd; font-size: 16px; width: 100%; max-width: 250px;">
+                        <option value="5">⭐⭐⭐⭐⭐ - Excellent</option>
+                        <option value="4">⭐⭐⭐⭐ - Très bien</option>
+                        <option value="3">⭐⭐⭐ - Bien</option>
+                        <option value="2">⭐⭐ - Moyen</option>
+                        <option value="1">⭐ - Médiocre</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 500;">Votre commentaire</label>
+                    <textarea name="contenu" rows="3" required placeholder="Partagez votre expérience..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px;"></textarea>
+                </div>
+                <button type="submit" style="background: #00897b; color: white; padding: 10px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                    Publier le commentaire
+                </button>
+            </form>
+        {% else %}
+            <p style="color: #666; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <a href="{% url 'connexion_page' %}" style="color: #00897b; font-weight: bold;">Connectez-vous</a> pour laisser un commentaire.
+            </p>
+        {% endif %}
+        
+        <!-- Liste des commentaires -->
+        <div style="margin-top: 20px;">
+            <h4 style="color: #333; margin-bottom: 15px;">Avis des utilisateurs</h4>
+            
+            {% for commentaire in article.commentaires.all|dictsortreversed:"date_creation" %}
+                {% if not commentaire.parent %}
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #00897b;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                            <div>
+                                <strong style="color: #00897b;">{{ commentaire.auteur.first_name }}</strong>
+                                <span style="color: #f9a825; font-size: 14px; margin-left: 10px;">
+                                    {% for i in "12345"|make_list %}
+                                        {% if forloop.counter <= commentaire.note %}⭐{% else %}☆{% endif %}
+                                    {% endfor %}
+                                </span>
+                                {% if commentaire.auteur.role == 'promoteur' %}
+                                    <span style="background: #f9a825; color: white; padding: 2px 8px; border-radius: 10px; font-size: 10px; margin-left: 5px;">🏷️ Promoteur</span>
+                                {% endif %}
+                            </div>
+                            <span style="color: #999; font-size: 12px;">{{ commentaire.date_creation|date:"d/m/Y à H:i" }}</span>
+                        </div>
+                        <p style="margin-top: 8px; color: #333; font-size: 15px;">{{ commentaire.contenu }}</p>
+                        
+                        <!-- Bouton Répondre -->
+                        {% if user.is_authenticated %}
+                            <button onclick="toggleReponse({{ commentaire.id }})" style="background: none; border: none; color: #00897b; cursor: pointer; font-size: 13px; margin-top: 5px;">
+                                💬 Répondre
+                            </button>
+                        {% endif %}
+                        
+                        <!-- Formulaire de réponse (caché par défaut) -->
+                        <div id="reponse-{{ commentaire.id }}" style="display: none; margin-top: 10px; margin-left: 20px;">
+                            <form method="POST" action="{% url 'repondre_commentaire' commentaire.id %}">
+                                {% csrf_token %}
+                                <textarea name="contenu" rows="2" placeholder="Votre réponse..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"></textarea>
+                                <button type="submit" style="margin-top: 5px; background: #00897b; color: white; padding: 5px 15px; border: none; border-radius: 5px; cursor: pointer;">Envoyer</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Afficher les réponses -->
+                        {% for reponse in commentaire.reponses.all|dictsortreversed:"date_creation" %}
+                            <div style="margin-left: 30px; margin-top: 10px; padding-left: 15px; border-left: 3px solid #f9a825;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                                    <div>
+                                        <strong style="color: #f9a825;">{{ reponse.auteur.first_name }}</strong>
+                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                            {% if reponse.auteur.role == 'promoteur' %} 🏷️ Promoteur{% endif %}
+                                        </span>
+                                    </div>
+                                    <span style="color: #999; font-size: 12px;">{{ reponse.date_creation|date:"d/m/Y à H:i" }}</span>
+                                </div>
+                                <p style="margin-top: 5px; color: #333; font-size: 14px;">{{ reponse.contenu }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% empty %}
+                <p style="color: #999; text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    Aucun commentaire pour le moment. Soyez le premier à donner votre avis !
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Carrousel
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('#carousel img');
+    const totalSlides = slides.length;
+    let autoSlideInterval;
+
+    function updateCarousel() {
+        const carousel = document.getElementById('carousel');
+        carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateCarousel();
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateCarousel();
+    }
+
+    function startAutoSlide() {
+        if (totalSlides > 1) {
+            autoSlideInterval = setInterval(nextSlide, 3000);
+        }
+    }
+
+    function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+    }
+
+    startAutoSlide();
+
+    const carouselContainer = document.querySelector('#carousel');
+    if (carouselContainer) {
+        const parent = carouselContainer.parentElement;
+        parent.addEventListener('mouseenter', stopAutoSlide);
+        parent.addEventListener('mouseleave', startAutoSlide);
+    }
+
+    // Fonction pour afficher/masquer le formulaire de réponse
+    function toggleReponse(id) {
+        var div = document.getElementById('reponse-' + id);
+        if (div.style.display === 'none') {
+            div.style.display = 'block';
+        } else {
+            div.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}
