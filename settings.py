@@ -1,14 +1,25 @@
 from pathlib import Path
 from decouple import config
 import os
+import sys
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Ajouter le dossier oasis au chemin de recherche Python
+sys.path.append(os.path.join(BASE_DIR, 'oasis'))
 
 # ==================== SÉCURITÉ ====================
 SECRET_KEY = config('SECRET_KEY', default='django-oasis-secret-key-2024')
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['oasis.ci', 'www.oasis.ci', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'oasis.ci', 
+    'www.oasis.ci', 
+    'localhost', 
+    '127.0.0.1',
+    'oasis-neub.onrender.com',
+    'oasis.onrender.com',
+]
 
 # HTTPS (désactivé en développement)
 SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
@@ -29,7 +40,13 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = 'same-origin'
 
-CSRF_TRUSTED_ORIGINS = ['https://oasis.ci', 'https://www.oasis.ci', 'http://127.0.0.1:8000']
+CSRF_TRUSTED_ORIGINS = [
+    'https://oasis.ci',
+    'https://www.oasis.ci',
+    'http://127.0.0.1:8000',
+    'https://oasis-neub.onrender.com',
+    'https://oasis.onrender.com',
+]
 
 # ==================== VALIDATEURS DE MOTS DE PASSE ====================
 AUTH_PASSWORD_VALIDATORS = [
@@ -86,6 +103,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://oasis.ci',
     'https://www.oasis.ci',
     'http://127.0.0.1:8000',
+    'https://oasis-neub.onrender.com',
+    'https://oasis.onrender.com',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
